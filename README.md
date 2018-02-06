@@ -4,7 +4,7 @@ Details regarding how Spectacles modules communicate over various modules. Refer
 
 ## AMQP
 
-How Spectacles communicates using a message broker compatible with the AMQP protocol (likely RabbitMQ). Sending and receiving data is done over separate exchanges of arbitrary names.
+How Spectacles communicates using a message broker compatible with the AMQP protocol (likely RabbitMQ). Sending and receiving data is done over separate exchanges of arbitrary names. The event name is used as a routing key, and by default the client should subscribe to and pull from from queues named in the pattern of `[exchange name]:[event name]`.
 
 ### Receiving data
 
