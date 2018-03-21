@@ -8,7 +8,7 @@ How Spectacles communicates using a message broker compatible with the AMQP prot
 
 ### Receiving data
 
-Only the `d` property of data received from the Discord gateway is sent to the message broker. Only OP code 0 data is sent, as the other OP codes are for internal WebSocket management. The `t` property of received data determines the queue name to publish to.
+Only the `d` property of data received from the Discord gateway is sent to the message broker. Only OP code 0 data is sent, as the other OP codes are for internal WebSocket management. The `t` property of received data determines the routing key to publish as. Queues are named in the pattern of `exchange[:subgroup]:EVENT_NAME` to facilitate simple yet powerful consumption.
 
 Ex:
 
@@ -27,7 +27,7 @@ The full packet to send to the Discord gateway should be sent to the message bro
 Ex:
 
 ```
-'4' => {
+'3' => {
   op: 4,
   d: {
     guild_id: 'some id',
