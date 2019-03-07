@@ -13,6 +13,8 @@ How Spectacles communicates using a message broker compatible with the AMQP prot
 | subgroup |                 | any                             | Subgroups are used to differentiate multiple queues for the same event on the same exchange. They are mostly useful for consuming an event multiple times on different services.                     |
 | event    | routing key     | "t" property from the gateway   | Ensure that the gateway only publishes events that will be consumed.                                                                                                                                 |
 
+Queues and exchanges must be declared as durable to prevent data loss in the event of multiple service failures.
+
 ### Receiving data
 
 Only the `d` property of data received from the Discord gateway is sent to the message broker. Only OP code 0 data is sent, as the other OP codes are for internal WebSocket management.
