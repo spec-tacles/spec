@@ -73,7 +73,7 @@ How Spectacles caches Discord objects using a k/v storage.
 | Presences      | PRESENCES:USER_ID              | USER_ID            | Hashmap                            | Discord Presences stored by User ID.                 |
 | Channels       | CHANNELS                       | CHANNEL_ID         | Hashmap, Set per Guild storing IDs | Channels stored by Channel ID.                       |
 | Roles          | ROLES                          | ROLE_ID            | Hashmap per Guild                  | Guild Roles stored by Role ID.                       |
-| Emojis         | EMOJIS                         | EMOJI_ID           | Hashmap                            | Guild Emojis stored by either Emoji ID.              |
+| Emojis         | EMOJIS                         | EMOJI_ID           | Hashmap                            | Guild Emojis stored by Emoji ID.              |
 | Messages       | MESSAGES:CHANNEL_ID:MESSAGE_ID | MESSAGE_ID         | Key                                | Channel Messages stored by Channel ID & Messages ID. |
 
 Cached Guilds should not contain following keys: `VoiceStates`, `Roles`, `Emojis`, `Channels`, `Members`, `Presences`.
