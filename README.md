@@ -72,9 +72,13 @@ How Spectacles caches Discord objects using a k/v storage.
 | Voice States   | VOICE_STATES:GUILD_ID          | Hashmap per Guild | Discord Voice States stored by User ID.              |
 | Presences      | PRESENCES:USER_ID              | Hashmap           | Discord Presences stored by User ID.                 |
 | Channels       | CHANNELS                       | Hashmap           | Channels stored by Channel ID.                       |
-| Channels       | CHANNELS:GUILD_ID              | Set               | Channel IDs stored by Guild ID.                      |
+| Channel IDs    | CHANNELS:GUILD_ID              | Set               | Channel IDs stored by Guild ID.                      |
 | Roles          | ROLES                          | Hashmap per Guild | Guild Roles stored by Role ID.                       |
 | Emojis         | EMOJIS                         | Hashmap           | Guild Emojis stored by either Emoji ID.              |
 | Messages       | MESSAGES:CHANNEL_ID:MESSAGE_ID | Key               | Channel Messages stored by Channel ID & Messages ID. |
 
-Cached Entities should omit null values if possible. Guilds should not contain following keys: `VoiceStates`, `Roles`, `Emojis`, `Channels`, `Members`, `Presences`. It must be possible to set a TTL for Message Objects through the Client, if not set the TTL amount defaults to 10 minutes per Message. Guild Channel IDs are stored separately in a Set to make Listing of these without ID easier. Messages are stored in another Database because different namespace will shorten lookups by value.
+Messages must be stored in a separate namespace to shorten lookups by value. In the case of using Redis, clients should default to database 1 for messages and database 0 for everything else.
+
+It must be possible to set a TTL for Message Objects through the Client, if not set the TTL amount defaults to 10 minutes per Message.
+
+Cached Entities should omit null values if possible. Guilds should not contain following keys: `VoiceStates`, `Roles`, `Emojis`, `Channels`, `Members`, `Presences`. Guild Channel IDs are stored separately in a Set to allow constant time guild channel retrieval.
