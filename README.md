@@ -62,18 +62,19 @@ If only the guild ID is known, packets can be published as a `SEND` event. The g
 
 ## Caching
 
-How Spectacles caches Discord objects using in memory storage (using Redis).
+How Spectacles caches Discord objects using a k/v storage.
 
-| Discord Entity | Field Naming pattern  | Key Naming pattern | Description                                                                                                                                                                                                                                                   |
-|----------------|-----------------------|--------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| User           | USERS                 | USER_ID            | Discord Users stored by there ID                                                                                                                                                                                                                              |
-| Guilds         | GUILDS                | GUILD_ID           | Discord Guilds stored by there ID. Presences, Voice States, Channels, Roles and Emojis are stored in there own Field to reduce parsing time for bigger guilds.IDs for Channels and Roles are still present on the Guild Object to make it easy to list them.  |
-| Members        | MEMBERS:GUILD_ID      | MEMBER_ID          | Discord Members stored by there ID.                                                                                                                                                                                                                           |
-| Voice States   | VOICE_STATES:GUILD_ID | USER_ID            | Discord Voice States stored by there User ID.                                                                                                                                                                                                                 |
-| Presences      | PRESENCES:USER_ID     | USER_ID            | Discord Presences stored by there User ID.                                                                                                                                                                                                                    |
-| Channels       | CHANNELS              | CHANNEL_ID         | Channels stored by there Channel ID.                                                                                                                                                                                                                          |
-| Roles          | ROLES                 | ROLE_ID            | Guild Roles stored by there Role ID.                                                                                                                                                                                                                          |
-| Emojis         | EMOJIS                | EMOJI_ID           | Guild Emojis stored by either there Emoji ID.                                                                                                                                                                                                                 |
-| Messages       | MESSAGES:CHANNEL_ID   | MESSAGE_ID         | Channel Messages stored by there Messages ID.                                                                                                                                                                                                                 |
+| Discord Entity | Field Naming pattern           | Key Naming pattern | Type                               | Description                                          |
+|----------------|--------------------------------|--------------------|------------------------------------|------------------------------------------------------|
+| User           | USERS                          | USER_ID            | Hashmap                            | Discord Users stored by ID                           |
+| Guilds         | GUILDS                         | GUILD_ID           | Hashmap                            | Discord Guilds stored by ID.                         |
+| Members        | MEMBERS:GUILD_ID               | MEMBER_ID          | Hashmap per Guild                  | Discord Members stored by ID.                        |
+| Voice States   | VOICE_STATES:GUILD_ID          | USER_ID            | Hashmap per Guild                  | Discord Voice States stored by User ID.              |
+| Presences      | PRESENCES:USER_ID              | USER_ID            | Hashmap                            | Discord Presences stored by User ID.                 |
+| Channels       | CHANNELS                       | CHANNEL_ID         | Hashmap, Set per Guild storing IDs | Channels stored by Channel ID.                       |
+| Roles          | ROLES                          | ROLE_ID            | Hashmap per Guild                  | Guild Roles stored by Role ID.                       |
+| Emojis         | EMOJIS                         | EMOJI_ID           | Hashmap                            | Guild Emojis stored by either Emoji ID.              |
+| Messages       | MESSAGES:CHANNEL_ID:MESSAGE_ID | MESSAGE_ID         | Key                                | Channel Messages stored by Channel ID & Messages ID. |
 
-Cached Guilds should not contain `Presences` or `Voice States`. Each of these should be a `Hash Store`.
+Cached Guilds should not contain following keys: `VoiceStates`, `Roles`, `Emojis`, `Channels`, `Members`, `Presences`.
+The Client should allow to set a TTL time for Message Objects, this can be done through an optional property which should default to 10 minutes.
