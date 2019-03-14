@@ -64,17 +64,17 @@ If only the guild ID is known, packets can be published as a `SEND` event. The g
 
 How Spectacles caches Discord objects using a k/v storage.
 
-| Discord Entity | Field Naming pattern           | Key Naming pattern | Type                               | Description                                          |
-|----------------|--------------------------------|--------------------|------------------------------------|------------------------------------------------------|
-| User           | USERS                          | USER_ID            | Hashmap                            | Discord Users stored by ID                           |
-| Guilds         | GUILDS                         | GUILD_ID           | Hashmap                            | Discord Guilds stored by ID.                         |
-| Members        | MEMBERS:GUILD_ID               | MEMBER_ID          | Hashmap per Guild                  | Discord Members stored by ID.                        |
-| Voice States   | VOICE_STATES:GUILD_ID          | USER_ID            | Hashmap per Guild                  | Discord Voice States stored by User ID.              |
-| Presences      | PRESENCES:USER_ID              | USER_ID            | Hashmap                            | Discord Presences stored by User ID.                 |
-| Channels       | CHANNELS                       | CHANNEL_ID         | Hashmap, Set per Guild storing IDs | Channels stored by Channel ID.                       |
-| Roles          | ROLES                          | ROLE_ID            | Hashmap per Guild                  | Guild Roles stored by Role ID.                       |
-| Emojis         | EMOJIS                         | EMOJI_ID           | Hashmap                            | Guild Emojis stored by Emoji ID.              |
-| Messages       | MESSAGES:CHANNEL_ID:MESSAGE_ID | MESSAGE_ID         | Key                                | Channel Messages stored by Channel ID & Messages ID. |
+| Discord Entity | Key Naming pattern             | Type              | Description                                          |
+|----------------|--------------------------------|-------------------|------------------------------------------------------|
+| User           | USERS                          | Hashmap           | Discord Users stored by ID                           |
+| Guilds         | GUILDS                         | Hashmap           | Discord Guilds stored by ID.                         |
+| Members        | MEMBERS:GUILD_ID               | Hashmap per Guild | Discord Members stored by ID.                        |
+| Voice States   | VOICE_STATES:GUILD_ID          | Hashmap per Guild | Discord Voice States stored by User ID.              |
+| Presences      | PRESENCES:USER_ID              | Hashmap           | Discord Presences stored by User ID.                 |
+| Channels       | CHANNELS                       | Hashmap           | Channels stored by Channel ID.                       |
+| Channels       | CHANNELS:GUILD_ID              | Set               | Channel IDs stored by Guild ID.                      |
+| Roles          | ROLES                          | Hashmap per Guild | Guild Roles stored by Role ID.                       |
+| Emojis         | EMOJIS                         | Hashmap           | Guild Emojis stored by either Emoji ID.              |
+| Messages       | MESSAGES:CHANNEL_ID:MESSAGE_ID | Key               | Channel Messages stored by Channel ID & Messages ID. |
 
-Cached Guilds should not contain following keys: `VoiceStates`, `Roles`, `Emojis`, `Channels`, `Members`, `Presences`.
-The Client should allow to set a TTL time for Message Objects, this can be done through an optional property which should default to 10 minutes.
+Cached Entities should omit null values if possible. Guilds should not contain following keys: `VoiceStates`, `Roles`, `Emojis`, `Channels`, `Members`, `Presences`. It must be possible to set a TTL for Message Objects through the Client, if not set the TTL amount defaults to 10 minutes per Message. Guild Channel IDs are stored separately in a Set to make Listing of these without ID easier. Messages are stored in another Database different namespace will shorten lookups by value.
