@@ -33,7 +33,7 @@ Clients can query a compliant server on its root path.
 
 ## Server implementation
 
-The server must parse the client's GraphQL schema and determine which properties of incoming objects to cache. It must then ingest these properties from a message broker and store the data in a backend. The server must serve a GraphQL endpoint on the root path that exactly matches the client's GraphQL schema.
+The server must parse the client's GraphQL schema and determine which properties of incoming objects to cache. It must then ingest these objects from a message broker, strip unspecified properties, and store the data in a backend. The server must serve a GraphQL endpoint on the root path that exactly matches the client's GraphQL schema.
 
 Recommended caching backends:
 
