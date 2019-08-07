@@ -1,3 +1,5 @@
+- [Ratelimits](https://github.com/spec-tacles/spec/blob/master/ratelimits.md)
+
 # Spectacles spec
 
 Details regarding how Spectacles modules communicate over various modules. Reference the [Discord API documentation](https://discordapp.com/developers/docs/topics/gateway#payloads) for information about packets received and sent. Packets should be either JSON or ETF encoded.
