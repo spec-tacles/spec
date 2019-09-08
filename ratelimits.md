@@ -8,9 +8,9 @@ Ratelimits are stored in Redis with 2 keys for each ratelimit bucket and 1 key f
 
 | Key                                | Expiration                       | Default | Description                                                                                                                                                    |
 |------------------------------------|----------------------------------|---------|----------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| \[\<prefix\>\]:global              | When the global ratelimit resets |         | Whether the application is globally ratelimited; the value is irrelevant.                                                                                      |
-| \[\<prefix\>\]:\<route\>:remaining | When the bucket resets           | 1       | The total number of remaining requests in this bucket. This value is NOT derived from Discord; instead it is automatically decremented when a request is made. |
-| \[\<prefix\>\]:\<route\>:limit     | None                             | -1      | The total number of requests that can be made after the bucket resets. This value is directly stored from Discord headers.                                     |
+| \[\<prefix\>:\]global              | When the global ratelimit resets |         | Whether the application is globally ratelimited; the value is irrelevant.                                                                                      |
+| \[\<prefix\>:\]\<route\>:remaining | When the bucket resets           | 1       | The total number of remaining requests in this bucket. This value is NOT derived from Discord; instead it is automatically decremented when a request is made. |
+| \[\<prefix\>:\]\<route\>:limit     | None                             | -1      | The total number of requests that can be made after the bucket resets. This value is directly stored from Discord headers.                                     |
 
 The calculation to determine the timeout for a given bucket is as follows, where the keys are `[route]:remaining`, `[route]:limit`, and `global` and the argument is a default timeout when one cannot be determined (recommended 1e3ms):
 
