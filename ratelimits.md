@@ -18,12 +18,16 @@ The calculation to determine the timeout for a given bucket is as follows, where
 local global = redis.call('pttl', KEYS[3])
 if global > 0 then return global end
 
+local limit = tonumber(redis.call('get', KEYS[2]))
+if limit == nil then limit = 1 end
+
+if limit <= 0 then
+	return 0
+end
+
 local remaining = tonumber(redis.call('get', KEYS[1]))
 
 if remaining == nil then
-	local limit = tonumber(redis.call('get', KEYS[2]))
-	if limit == nil then limit = 1 end
-
 	redis.call('set', KEYS[1], limit - 1)
 	return 0
 end
@@ -46,7 +50,7 @@ Clients must use the value from this script tentatively and attempt to re-claim 
 Once a client receives ratelimit headers from Discord, it must ONLY set:
 
 - The expiration for the `global` key, if any
-- The expiration for the `[route]:remaining` key
-- The `[route]:limit` key
+- The expiration for the `[route]:remaining` key; see below
+- The `[route]:limit` key; if not present, any number <= 0
 
 Expirations should be determined from headers (`X-Ratelimit-Reset` - `Date` = seconds to timeout). In the case of a 429 status code from Discord, clients should prefer the `Reset-After` header (given in milliseconds).
