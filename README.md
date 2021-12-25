@@ -28,11 +28,16 @@ usually generated randomly at runtime.
 
 ## Communication System
 
-Every message broker has 3 basic concepts:
+Every message broker has at least 3 concepts:
 
 1. Publish
 2. Call
 4. Consume
+
+Every message emitted by the message broker has at least 2 concepts:
+
+1. Acknowledge
+2. Reply
 
 ### Publish
 
@@ -51,13 +56,20 @@ Publish must return the unique ID of this event emission.
 Call behaves similarly to publish, except the calling client will wait for a single response from
 another client.
 
-When a client receives a "publish" event, it can choose to respond; if the source client is
-listening, it will receive the response.
-
 ### Consume
 
 When a client consumes, it signals an intent to receive events for its group. The client must
 specify which events it intends to receive.
+
+### Acknowledge
+
+When a message is acknowledged, it is removed from pending state and will no longer be re-delivered
+to other consumers if the recipient client dies or times out.
+
+### Reply
+
+When a client receives a "publish" event, it can choose to respond; if the source client is
+listening, it will receive the response.
 
 ## Message Brokers
 
@@ -95,6 +107,14 @@ Loop forever:
 ##### XREAD
 
 - `XREADGROUP GROUP {group} {client} STREAMS {events.map ">"}`
+
+#### Acknowledge
+
+- `XACK {event} {group} {publish_id}`
+
+#### Reply
+
+- `PUBLISH {event}:{publish_id} {data}`
 
 ### IPC
 
