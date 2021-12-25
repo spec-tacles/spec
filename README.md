@@ -84,6 +84,8 @@ Due to Redis streams, the consumption process is two-fold. Each client must:
 1. Periodically run `XAUTOCLAIM` to ensure that all orphaned messages are handled
 2. Use `XREADGROUP` to consume messages for its group
 
+Both consumption processes emit events for the client to handle.
+
 ##### XAUTOCLAIM
 
 Loop forever:
